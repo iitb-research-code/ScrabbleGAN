@@ -6,7 +6,7 @@ class Config:
     data_folder_path = f'./data/{dataset}' 
     img_h = 32
     char_w = 16
-    partition = 'tr'  # 'tr = train' / 'vl = val' / 'te = test'
+    partition = 'all'  # 'tr = train' / 'vl = val' / 'te = test' / all = train + test + val
 
     batch_size = 16
     num_epochs = 100   # number of epochs to train for

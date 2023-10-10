@@ -19,7 +19,7 @@ Repo Directory
 ```
 
 2. Modify the `/config.py` file to change :
-`dataset`, `num_chars`, `start_epoch`, `train_gen_steps`,  `num_epochs`, `batch_size`, `resume_training` and File_Structure
+`dataset`, `num_chars`, `start_epoch`, `train_gen_steps`,  `num_epochs`, `batch_size`, `resume_training` , `partition` and File_Structure
 
 
 3. To Prepare Data for Training, run:
