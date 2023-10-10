@@ -75,18 +75,10 @@ class ScrabbleGAN(nn.Module):
         self.z_dim = cfg.z_dim
 
         # Get word list from lexicon to be used to generate fake images
-        if cfg.dataset == 'IAM':
-            self.fake_words = pd.read_csv(cfg.lexicon_file, sep='\t', names=['words'])
-            # filter words with len >= 20
-            self.fake_words = self.fake_words.loc[self.fake_words.words.str.len() < 20]
-            self.fake_words = self.fake_words.words.to_list()
-        else:
-            exception_chars = ['ï', 'ü', '.', '_', 'ö', ',', 'ã', 'ñ']
-            self.fake_words = pd.read_csv(cfg.lexicon_file, '\t')['lemme']
-            self.fake_words = [word.split()[-1] for word in self.fake_words
-                               if (pd.notnull(word) and all(char not in word for char in exception_chars))]
-
+        with open(cfg.lexicon_file,'r') as f:
+          self.fake_words=f.read().split()
         fake_words_clean = []
+        
         for word in self.fake_words:
             word_set = set(word)
             if len(word_set.intersection(char_map.keys())) == len(word_set):

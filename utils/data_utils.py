@@ -44,3 +44,4 @@ class WordMap:
             dec_words.append(word_chars)
 
         return dec_words
+    

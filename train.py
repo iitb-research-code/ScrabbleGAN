@@ -31,6 +31,8 @@ logging.basicConfig(level=level, format=format_log, handlers=handlers)
 class Trainer:
     def __init__(self, config):
         self.config = config
+
+        
         self.terminal_width = shutil.get_terminal_size((80, 20)).columns
 
         logging.info(f' Loading Data '.center(self.terminal_width, '*'))
@@ -68,7 +70,9 @@ class Trainer:
         self.start_epoch = 1
         # Load checkpoint if training is to be resumed
         self.model_checkpoint = ModelCheckpoint(config=self.config)
+        print(config.resume_training,' is the resuming status')
         if config.resume_training:
+            print('resuming the model training')
             self.model, self.optimizers, self.schedulers, self.start_epoch = \
                 self.model_checkpoint.load(self.model, self.config.start_epoch, self.optimizers, self.schedulers)
             self.G_optimizer, self.D_optimizer, self.R_optimizer = self.optimizers
@@ -181,7 +185,7 @@ class Trainer:
 
     def train(self):
         logging.info(f' Training '.center(self.terminal_width, '*'))
-
+        print('training....')
         for epoch in range(self.start_epoch, self.config.num_epochs + 1):
             logging.info(f' Epoch [{epoch}/{self.config.num_epochs}] '.center(self.terminal_width, 'x'))
             self.model.train()
@@ -269,5 +273,7 @@ class Trainer:
 if __name__ == "__main__":
     config = Config
     terminal_width = shutil.get_terminal_size((80, 20)).columns
+    print('preparing the trainer')
     trainer = Trainer(config)
+    print('the training is starting')
     trainer.train()

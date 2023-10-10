@@ -2,25 +2,25 @@ import torch
 
 
 class Config:
-    dataset = 'RIMES'  # 'RIMES' / 'IAM'
-    data_folder_path = './RIMES/'  # relative to ./data/
+    dataset = 'hindi'  # hindi, tamil, etc.
+    data_folder_path = f'./data/{dataset}' 
     img_h = 32
     char_w = 16
-    partition = 'tr'  # 'tr' / 'vl' / 'te'
+    partition = 'tr'  # 'tr = train' / 'vl = val' / 'te = test'
 
-    batch_size = 8
-    num_epochs = 200
+    batch_size = 16
+    num_epochs = 100   # number of epochs to train for
     epochs_lr_decay = 100  # learning rate decay will be applied for last these many steps (should be <= num_epochs)
     resume_training = False
-    start_epoch = 5
+    start_epoch = 1
 
     train_gen_steps = 4  # generator weights to be updated after every specified number of steps
     grad_alpha = 1
     grad_balance = True
 
     data_file = f'./data/{dataset}_{partition}_data.pkl'
-    lexicon_file_name = 'Lexique383.tsv' if dataset == 'RIMES' else 'words.txt'
-    lexicon_file = f'./data/Lexicon/{lexicon_file_name}'
+    lexicon_file_name = 'vocab.txt'
+    lexicon_file = f'./data/{dataset}/{lexicon_file_name}'
     lmdb_output = f'./data/{dataset}_{partition}_data'
 
     architecture = 'ScrabbleGAN'
@@ -48,6 +48,6 @@ class Config:
 
     # Noise vector
     z_dim = 128
-    num_chars = 74 if dataset == 'IAM' else 93
+    num_chars = 109  # change the num chars on the basis of the dataset
 
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
