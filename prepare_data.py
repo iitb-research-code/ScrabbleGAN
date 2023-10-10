@@ -67,11 +67,13 @@ def read_data(config):
     if dataset == 'hindi':
 
         if partition == 'tr':
-            partition_name = 'train'
+            partition_names = ['train']
         elif partition == 'vl':
-            partition_name = 'val'
+            partition_names = ['val']
+        elif partition == 'all':
+            partition_names = ['train','test','val']
         else:
-            partition_name = 'test'
+            partition_names = ['test']
 
         # create char_map using training labels
         with open(f'{data_folder_path}/train.txt', 'r') as f:
@@ -86,21 +88,23 @@ def read_data(config):
         num_chars = len(char_map.keys())
 
         # Extract IDs for required set
-        with open(f'{data_folder_path}/{partition_name}.txt', 'r') as f:
-            ids = f.read()
-            partition_ids = [i.split()[0] for i in ids.splitlines() if len(i) > 1]
-            words_raw = [i.split()[1] for i in ids.splitlines() if len(i) > 1]
-
         word_data = {}
-        for img_path, label in zip(partition_ids, words_raw):
-            img_path = f'{data_folder_path}/{partition_name}/{img_path}'
-            img, valid_img = read_image(img_path, len(label), img_h, char_w)
-            img_id = img_path.split('/')[-1].split('.')[0]
-            if valid_img:
-                try:
-                    word_data[img_id] = [[char_map[char] for char in label], img]
-                except KeyError:
-                    pass
+        for partition_name in partition_names:
+            with open(f'{data_folder_path}/{partition_name}.txt', 'r') as f:
+                ids = f.read()
+                partition_ids = [i.split()[0] for i in ids.splitlines() if len(i) > 1]
+                words_raw = [i.split()[1] for i in ids.splitlines() if len(i) > 1]
+
+            
+            for img_path, label in zip(partition_ids, words_raw):
+                img_path = f'{data_folder_path}/{partition_name}/{img_path}'
+                img, valid_img = read_image(img_path, len(label), img_h, char_w)
+                img_id = img_path.split('/')[-1].split('.')[0]
+                if valid_img:
+                    try:
+                        word_data[partition_name[:2]+'_'+img_id] = [[char_map[char] for char in label], img]
+                    except KeyError:
+                        pass
 
     print(f'Number of images = {len(word_data)}')
     print(f'Number of unique characters = {num_chars}')
