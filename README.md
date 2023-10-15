@@ -43,3 +43,12 @@ To generate new image run `run_inference.py` , where you can change the
 2. path to the data file.
 3. word for which you want to generate image.
 4. noise in the generated image.
+
+## Use the Recogniser model
+To use the recogniser model run `run_recogniser.py `. In it you have to provide the path of the image and the path of the model
+
+## To produce images of many words Using the Generator
+To Produce images of many words run `produce_images.py ` in this you have to provide :
+1. txt file which consists of all the words separated by lines.
+2. path to the output folder.
+3. path to the generator model.

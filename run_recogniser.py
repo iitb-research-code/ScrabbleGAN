@@ -8,24 +8,8 @@ import torchvision.transforms as transforms
 from torch.nn.utils.rnn import pad_sequence
 import numpy as np
 import cv2
+import argparse
 
-#  loading the model
-dataset='hindi'
-config = Config
-# config.dataset = 'hindi'
-# config.lexicon_file = './data/hindi/vocab.txt'
-# config.num_chars = 109
-
-with open(config.data_file, 'rb') as f:  # data file path
-   char_map = pkl.load(f)
-char_map=char_map['char_map']
-MainModel = ImgGenerator(checkpt_path=f'./weights/model_checkpoint_epoch_50.pth.tar',  # model path
-                         config=config, char_map=char_map)
-transforms = transforms.Compose([
-            transforms.ToTensor(),
-            transforms.Normalize((0.5,), (0.5,))
-])
-recogniser = MainModel.model.R
 
 # utils
 def read_image(img_path, img_h=32, char_w=16):
@@ -64,16 +48,52 @@ def read_image(img_path, img_h=32, char_w=16):
 
     return img
 
-# Load image
-img=read_image('/content/drive/MyDrive/hindi/hindi/test/10044.jpg')  # path to the image
-transformed_img = transforms(img / 255.)
-transformed_img = transformed_img.float()
-transformed_img = pad_sequence([transformed_img.squeeze().permute(1, 0)],
-                  batch_first=True,
-                  padding_value=1.)
-transformed_img = transformed_img.permute(0, 2, 1).unsqueeze(1)
+def main(args):
+    #  loading the model
+    dataset='hindi'
+    config = Config
+    # config.dataset = 'hindi'
+    # config.num_chars = 109
 
-# run recogniser model
-recogniser_output=recogniser(transformed_img).permute(1, 0, 2).max(2)[1].permute(1, 0)
-preds = MainModel.word_map.recognizer_decode(recogniser_output.cpu().numpy())
-print(preds)
+    with open(config.data_file, 'rb') as f:  # data file path
+        char_map = pkl.load(f)
+    char_map=char_map['char_map']
+    MainModel = ImgGenerator(checkpt_path=args.model_path,  # model path
+                            config=config, char_map=char_map)
+    transforms = transforms.Compose([
+                transforms.ToTensor(),
+                transforms.Normalize((0.5,), (0.5,))
+    ])
+    recogniser = MainModel.model.R
+
+
+    # Load image
+    img=read_image(args.input_file)  # path to the image
+    transformed_img = transforms(img / 255.)
+    transformed_img = transformed_img.float()
+    transformed_img = pad_sequence([transformed_img.squeeze().permute(1, 0)],
+                    batch_first=True,
+                    padding_value=1.)
+    transformed_img = transformed_img.permute(0, 2, 1).unsqueeze(1)
+
+    # run recogniser model
+    recogniser_output=recogniser(transformed_img).permute(1, 0, 2).max(2)[1].permute(1, 0)
+    preds = MainModel.word_map.recognizer_decode(recogniser_output.cpu().numpy())
+    print('PREDICTED OUTPUT :',preds)
+    return preds
+
+
+
+def parse_args():
+    parser = argparse.ArgumentParser(description="Preprocessing image", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+
+    parser.add_argument("-i", "--input_file", type=str, default=None, help="path to the input img file")
+    parser.add_argument("-m", "--model_path", type=str, default='./weights/model_checkpoint_epoch_100.pth.tar', help="path to the model")
+    
+    args = parser.parse_args()
+    return args
+
+
+if __name__ == "__main__":
+    args = parse_args()
+    main(args)
