@@ -2,17 +2,17 @@ import torch
 
 
 class Config:
-    dataset = 'hindi'  # hindi, tamil, etc.
+    dataset = 'gujarati'  # hindi, tamil, etc.
     data_folder_path = f'./data/{dataset}' 
     img_h = 32
     char_w = 16
     partition = 'all'  # 'tr = train' / 'vl = val' / 'te = test' / all = train + test + val
 
-    batch_size = 16
-    num_epochs = 100   # number of epochs to train for
+    batch_size = 128
+    num_epochs = 200   # number of epochs to train for
     epochs_lr_decay = 100  # learning rate decay will be applied for last these many steps (should be <= num_epochs)
-    resume_training = False
-    start_epoch = 1
+    resume_training = True
+    start_epoch = 10
 
     train_gen_steps = 4  # generator weights to be updated after every specified number of steps
     grad_alpha = 1
@@ -48,6 +48,6 @@ class Config:
 
     # Noise vector
     z_dim = 128
-    num_chars = 109  # change the num chars on the basis of the dataset
+    num_chars = 80  # change the num chars on the basis of the dataset
 
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    device = torch.device('cuda:1')
