@@ -11,13 +11,15 @@ import os
 
 # produce images 
 def produce_image(generator,words,images_folder):
-  for i in words:
-    generated_imgs, _, word_labels = generator.generate(word_list=i)
-    sentence_img = []
-    for label, img in zip(word_labels, generated_imgs):
-        img = img[:, img.sum(0) < 31.5]
-        img*=255
-        cv2.imwrite(images_folder+'/'+label+'.jpg',img)
+    count = 1
+    for i in words:
+        generated_imgs, _, word_labels = generator.generate(word_list=i)
+        sentence_img = []
+        for label, img in zip(word_labels, generated_imgs):
+            img = img[:, img.sum(0) < 31.5]
+            img*=255
+            cv2.imwrite(images_folder+'/'+str(count)+'.jpg',img)
+            count +=1
 
 
 def main(args):
@@ -27,17 +29,13 @@ def main(args):
         os.makedirs(images_folder)
     
     # loading the model
-    dataset='hindi'
     config = Config
-    # config.dataset = 'hindi'
-    # config.num_chars = 109
 
     print('LOADING THE MODEL')
     with open(config.data_file, 'rb') as f:  # data file path
         char_map = pkl.load(f)
     char_map=char_map['char_map']
-    generator = ImgGenerator(checkpt_path=args.model_path,
-                            config=config, char_map=char_map)
+    generator = ImgGenerator(checkpt_path=args.model_path, config=config, char_map=char_map)
     z_dist = torch.distributions.Normal(loc=0, scale=1.)
 
 
