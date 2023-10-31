@@ -36,7 +36,6 @@ def main(args):
         char_map = pkl.load(f)
     char_map=char_map['char_map']
     generator = ImgGenerator(checkpt_path=args.model_path, config=config, char_map=char_map)
-    z_dist = torch.distributions.Normal(loc=0, scale=1.)
 
 
     print('LOADING THE INPUT WORDS')
