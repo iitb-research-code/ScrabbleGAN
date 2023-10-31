@@ -52,3 +52,9 @@ To Produce images of many words run `produce_images.py ` in this you have to pro
 1. txt file which consists of all the words separated by lines.
 2. path to the output folder.
 3. path to the generator model.
+
+## To produce images of many words Using the Generator with their bboxs in a txt file
+To Produce images of many words run `group_images.bbox.py ` in this you have to provide :
+1. txt file which consists of all the words separated by lines.
+2. path to the output folder.
+3. path to the generator model.
