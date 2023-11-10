@@ -9,18 +9,18 @@ class Config:
     partition = 'all'  # 'tr = train' / 'vl = val' / 'te = test' / all = train + test + val
 
     batch_size = 128
-    num_epochs = 200   # number of epochs to train for
+    num_epochs = 250   # number of epochs to train for
     epochs_lr_decay = 100  # learning rate decay will be applied for last these many steps (should be <= num_epochs)
     resume_training = True
-    start_epoch = 10
+    start_epoch = 200
 
     train_gen_steps = 4  # generator weights to be updated after every specified number of steps
     grad_alpha = 1
     grad_balance = True
 
-    data_file = f'./data/{dataset}_{partition}_data.pkl'
+    data_file = f'/home/venkat/BADRI/RECOGNITION/SYNTHESIS/data/scrabblegan_data/{dataset}_all_data.pkl'
     lexicon_file_name = 'vocab.txt'
-    lexicon_file = f'./data/{dataset}/{lexicon_file_name}'
+    lexicon_file = f'/home/venkat/BADRI/RECOGNITION/data/{dataset}/{lexicon_file_name}'
     lmdb_output = f'./data/{dataset}_{partition}_data'
 
     architecture = 'ScrabbleGAN'
@@ -48,6 +48,20 @@ class Config:
 
     # Noise vector
     z_dim = 128
-    num_chars = 80  # change the num chars on the basis of the dataset
+    
+    
+    CHAR_SIZES = {}
+    CHAR_SIZES['bengali'] = 92
+    CHAR_SIZES['gujarati'] = 80
+    CHAR_SIZES['gurumukhi'] = 82
+    CHAR_SIZES['hindi'] = 109
+    CHAR_SIZES['kannada'] = 84
+    CHAR_SIZES['malayalam'] = 96
+    CHAR_SIZES['odia'] = 85
+    CHAR_SIZES['tamil'] = 73
+    CHAR_SIZES['telugu'] = 88
+    CHAR_SIZES['urdu'] = 82
+    
+    num_chars = CHAR_SIZES[dataset] # change the num chars on the basis of the dataset
 
-    device = torch.device('cuda:1')
+    device = torch.device('cuda:0')
